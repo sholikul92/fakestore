@@ -19,12 +19,12 @@ const useAuthStore = create<UsersAction>()(
     (set, get) => ({
       users: [],
       currentUser: null,
-      register: (user) => {
-        const existingUser = get().users.find((u) => u.email === user.email);
+      register: (payload) => {
+        const existingUser = get().users.find((u) => u.email === payload.email);
         if (existingUser)
           return { success: false, message: 'Email sudah terdaftar!' };
 
-        set({ users: [...get().users, user] });
+        set({ users: [...get().users, payload] });
         return { success: true, message: 'Registrasi berhasil!' };
       },
       login: (payload) => {
@@ -41,7 +41,10 @@ const useAuthStore = create<UsersAction>()(
     {
       name: 'users',
       storage: createJSONStorage(() => localStorage),
-      partialize: (state) => ({ users: state.users }),
+      partialize: (state) => ({
+        users: state.users,
+        currentUser: state.currentUser,
+      }),
     }
   )
 );

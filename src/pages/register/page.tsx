@@ -1,12 +1,12 @@
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
-import type { User } from '../../types/auth';
+import type { RegisterPayload } from '../../types/auth';
 import useAuthStore from '../../store/authStore';
 
 export default function RegisterPage() {
   const register = useAuthStore((state) => state.register);
   const navigate = useNavigate();
-  const [user, setUser] = useState<User>({
+  const [payload, setPayload] = useState<RegisterPayload>({
     name: '',
     email: '',
     password: '',
@@ -21,13 +21,13 @@ export default function RegisterPage() {
     const nameElement = e.target.name;
     const value = e.target.value;
 
-    setUser((prev) => ({ ...prev, [nameElement]: value }));
+    setPayload((prev) => ({ ...prev, [nameElement]: value }));
   };
 
   const handleSubmit: React.FormEventHandler<HTMLFormElement> = (e) => {
     e.preventDefault();
 
-    const result = register(user);
+    const result = register(payload);
     if (!result.success) {
       setError(result.message);
     } else {
