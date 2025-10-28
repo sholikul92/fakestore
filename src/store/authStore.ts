@@ -7,6 +7,11 @@ export type User = {
   password: string;
 };
 
+export type LoginPayload = {
+  email: string;
+  password: string;
+};
+
 type ReturnAuthValue = {
   success: boolean;
   message: string;
@@ -16,6 +21,7 @@ type UsersAction = {
   users: User[];
   currentUser: User | null;
   register: (user: User) => ReturnAuthValue;
+  login: (payload: LoginPayload) => ReturnAuthValue;
 };
 
 const useAuthStore = create<UsersAction>()(
@@ -30,6 +36,16 @@ const useAuthStore = create<UsersAction>()(
 
         set({ users: [...get().users, user] });
         return { success: true, message: 'Registrasi berhasil!' };
+      },
+      login: (payload) => {
+        const user = get().users.find((u) => u.email === payload.email);
+
+        if (!user) return { success: false, message: 'Email tidak terdaftar!' };
+        if (user.password !== payload.password)
+          return { success: false, message: 'Password Salah!' };
+
+        set({ currentUser: user });
+        return { success: true, message: 'Login berhasil!' };
       },
     }),
     {
