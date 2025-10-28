@@ -22,15 +22,14 @@ export default function LoginPage() {
   const handleSubmit: React.FormEventHandler<HTMLFormElement> = (e) => {
     e.preventDefault();
 
-    const result = login(payload);
-    console.log({ payload });
-    console.log({ result });
+    if (!payload.email || !payload.password)
+      return setError('Email dan Password wajib di isi!');
 
-    if (result.success) {
-      navigate('/');
-    } else {
-      setError(result.message);
-    }
+    const result = login(payload);
+
+    if (!result.success) return setError(result.message);
+
+    navigate('/');
   };
 
   const handleNavigate = () => {
@@ -44,7 +43,7 @@ export default function LoginPage() {
         {error && <p className='text-red-500 text-center'>{error}</p>}
         <form className='flex flex-col gap-4' onSubmit={handleSubmit}>
           <input
-            type='mail'
+            type='email'
             name='email'
             id='email'
             placeholder='Email'
