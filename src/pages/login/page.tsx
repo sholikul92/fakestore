@@ -1,10 +1,11 @@
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import useAuthStore from '../../store/authStore';
+import type { LoginPayload } from '../../types/auth';
 
 export default function LoginPage() {
   const navigate = useNavigate();
-  const [payload, setPayload] = useState({
+  const [payload, setPayload] = useState<LoginPayload>({
     email: '',
     password: '',
   });

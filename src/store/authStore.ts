@@ -1,26 +1,16 @@
 import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
-
-export type User = {
-  name: string;
-  email: string;
-  password: string;
-};
-
-export type LoginPayload = {
-  email: string;
-  password: string;
-};
-
-type ReturnAuthValue = {
-  success: boolean;
-  message: string;
-};
+import type {
+  User,
+  RegisterPayload,
+  LoginPayload,
+  ReturnAuthValue,
+} from '../types/auth';
 
 type UsersAction = {
   users: User[];
   currentUser: User | null;
-  register: (user: User) => ReturnAuthValue;
+  register: (user: RegisterPayload) => ReturnAuthValue;
   login: (payload: LoginPayload) => ReturnAuthValue;
 };
 

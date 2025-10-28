@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
-import type { User } from '../../store/authStore';
+import type { User } from '../../types/auth';
 import useAuthStore from '../../store/authStore';
 
 export default function RegisterPage() {
