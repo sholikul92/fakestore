@@ -1,2 +1,26 @@
 @import 'tailwindcss';
 @custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --color-background: #f9fafb;
+  --color-card: #ffffff;
+  --color-border: #e5e7eb;
+  --color-text: #111827;
+  --color-textMuted: #6b7280;
+  --color-accent: #2563eb;
+  --color-accentHover: #1d4ed8;
+  --color-danger: #dc2626;
+  --color-success: #16a34a;
+  --color-nav: #2563eb;
+
+  --color-dark-background: #0f172a;
+  --color-dark-card: #1e293b;
+  --color-dark-border: #334155;
+  --color-dark-text: #f1f5f9;
+  --color-dark-textMuted: #94a3b8;
+  --color-dark-accent: #3b82f6;
+  --color-dark-accentHover: #60a5fa;
+  --color-dark-danger: #ef4444;
+  --color-dark-success: #22c55e;
+  --color-dark-nav: #3b82f6
+}
