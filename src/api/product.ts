@@ -8,3 +8,11 @@ export const fetchProducts = async () => {
   const result = (await res.json()) as Product[];
   return result;
 };
+
+export const getDetailProducts = async (productId: number) => {
+  const res = await fetch(`${BASE_URL}/${productId}`);
+  if (!res.ok) throw new Error('Gagal mengambil data produk');
+  console.log(res);
+  const result = (await res.json()) as Product;
+  return result;
+};
