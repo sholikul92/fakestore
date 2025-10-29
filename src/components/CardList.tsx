@@ -14,7 +14,7 @@ export default function CardList() {
 
   return (
     <div className='grid grid-cols-5 gap-4'>
-      {data && data.map((product) => <Card {...product} />)}
+      {data && data.map((product) => <Card {...product} key={product.id} />)}
     </div>
   );
 }
