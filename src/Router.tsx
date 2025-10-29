@@ -1,12 +1,18 @@
 import { Route, Routes } from 'react-router-dom';
 import RegisterPage from './pages/register/page';
 import LoginPage from './pages/login/page';
+import DetailProduct from './pages/detailProduct/DetailProduct';
 import App from './App';
+import MainLayout from './layout/MainLayout';
 
 export default function RouterProvider() {
   return (
     <Routes>
-      <Route path='/' element={<App />} />
+      <Route element={<MainLayout />}>
+        <Route path='/' element={<App />} />
+        <Route path='/product/:id' element={<DetailProduct />} />
+      </Route>
+
       <Route path='/register' element={<RegisterPage />} />
       <Route path='/login' element={<LoginPage />} />
     </Routes>
