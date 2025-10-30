@@ -24,7 +24,11 @@ const useAuthStore = create<UsersAction>()(
         if (existingUser)
           return { success: false, message: 'Email sudah terdaftar!' };
 
-        set({ users: [...get().users, payload] });
+        const generateUserId = +new Date();
+
+        const user: User = { ...payload, userId: generateUserId };
+
+        set({ users: [...get().users, user] });
         return { success: true, message: 'Registrasi berhasil!' };
       },
       login: (payload) => {
