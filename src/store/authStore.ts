@@ -12,6 +12,7 @@ type UsersAction = {
   currentUser: User | null;
   register: (user: RegisterPayload) => ReturnAuthValue;
   login: (payload: LoginPayload) => ReturnAuthValue;
+  logout: () => void;
 };
 
 const useAuthStore = create<UsersAction>()(
@@ -41,6 +42,7 @@ const useAuthStore = create<UsersAction>()(
         set({ currentUser: user });
         return { success: true, message: 'Login berhasil!' };
       },
+      logout: () => set({ currentUser: null }),
     }),
     {
       name: 'users',
