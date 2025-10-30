@@ -1,5 +1,6 @@
 import type { Product } from '../types/product';
 import { useNavigate } from 'react-router-dom';
+import CardButton from './CartButton';
 
 export default function Card(product: Product) {
   const navigate = useNavigate();
@@ -30,9 +31,7 @@ export default function Card(product: Product) {
           </div>
         </div>
         <div className='flex justify-end'>
-          <button className='bg-dark-background text-background dark:bg-background dark:text-dark-background p-2 rounded-xl cursor-pointer'>
-            Add Cart
-          </button>
+          <CardButton {...product} />
         </div>
       </div>
     </div>
