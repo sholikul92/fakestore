@@ -5,7 +5,9 @@ import useAuthStore from './authStore';
 export type Cart = {
   id: number;
   title: string;
+  imageUrl: string;
   price: number;
+  totalPrice: number;
   quantity: number;
 };
 
@@ -17,6 +19,8 @@ export type UserCart = {
 type CartAction = {
   userCarts: UserCart[];
   addToCart: (newItem: Cart) => void;
+  increaseQuantityItem: (id: number) => void;
+  decreaseQuantityItem: (id: number) => void;
 };
 
 const useCartStore = create<CartAction>()(
@@ -46,11 +50,16 @@ const useCartStore = create<CartAction>()(
         let updatedItems: Cart[];
 
         if (existingItem) {
-          updatedItems = existingItems.map((item) =>
-            item.id === newItem.id
-              ? { ...item, quantity: item.quantity + newItem.quantity }
-              : item
-          );
+          updatedItems = existingItems.map((item) => {
+            const newQuantity = item.quantity + newItem.quantity;
+            return item.id === newItem.id
+              ? {
+                  ...item,
+                  quantity: newQuantity,
+                  totalPrice: item.price * newQuantity,
+                }
+              : item;
+          });
         } else {
           updatedItems = [...existingItems, newItem];
         }
@@ -60,6 +69,58 @@ const useCartStore = create<CartAction>()(
         );
 
         set({ userCarts: updatedUserCarts });
+      },
+
+      increaseQuantityItem: (id) => {
+        const currentUser = useAuthStore.getState().currentUser!;
+        const rightCart = get().userCarts.find(
+          (uc) => uc.userId === currentUser.userId
+        )!;
+
+        const addSelectedItem = rightCart.items.map((cart) => {
+          const newQuantity = cart.quantity + 1;
+          return cart.id === id
+            ? {
+                ...cart,
+                quantity: newQuantity,
+                totalPrice: cart.price * newQuantity,
+              }
+            : cart;
+        });
+
+        const cartUpdateWithAddQuantity = get().userCarts.map((uc) =>
+          uc.userId === currentUser.userId
+            ? { ...uc, items: addSelectedItem }
+            : uc
+        );
+
+        set({ userCarts: cartUpdateWithAddQuantity });
+      },
+
+      decreaseQuantityItem: (id) => {
+        const currentUser = useAuthStore.getState().currentUser!;
+        const rightCart = get().userCarts.find(
+          (uc) => uc.userId === currentUser.userId
+        )!;
+
+        const reduceSelectedItem = rightCart.items.map((cart) => {
+          const newQuantity = cart.quantity - 1;
+          return cart.id === id
+            ? {
+                ...cart,
+                quantity: newQuantity,
+                totalPrice: cart.price * newQuantity,
+              }
+            : cart;
+        });
+
+        const cartUpdateWithReducedQuantity = get().userCarts.map((uc) =>
+          uc.userId === currentUser.userId
+            ? { ...uc, items: reduceSelectedItem }
+            : uc
+        );
+
+        set({ userCarts: cartUpdateWithReducedQuantity });
       },
     }),
     {
