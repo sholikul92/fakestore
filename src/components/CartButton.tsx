@@ -15,7 +15,9 @@ export default function CartButton(product: Product) {
     const newCart: Cart = {
       id: product.id,
       title: product.title,
+      imageUrl: product.images[0],
       price: product.price,
+      totalPrice: product.price,
       quantity: 1,
     };
 
