@@ -1,16 +1,17 @@
-import { AiOutlineShoppingCart } from 'react-icons/ai';
-import useCartStore, { type Cart } from '../store/cartStore';
-import useAuthStore from '../store/authStore';
-import type { Product } from '../types/product';
-import { useNavigate } from 'react-router-dom';
+import { AiOutlineShoppingCart } from "react-icons/ai";
+import useCartStore, { type Cart } from "../store/cartStore";
+import useAuthStore from "../store/authStore";
+import type { Product } from "../types/product";
+import { useNavigate } from "react-router-dom";
 
 export default function CartButton(product: Product) {
   const addToCart = useCartStore((state) => state.addToCart);
   const currentUser = useAuthStore((state) => state.currentUser);
   const navigate = useNavigate();
 
-  const handleAddToCart = () => {
-    if (!currentUser) return navigate('/login');
+  const handleAddToCart: React.MouseEventHandler<HTMLButtonElement> = (e) => {
+    e.stopPropagation();
+    if (!currentUser) return navigate("/login");
 
     const newCart: Cart = {
       id: product.id,
