@@ -1,6 +1,6 @@
-import { OrbitProgress } from 'react-loading-indicators';
-import { useProducts } from '../hooks/useProduct';
-import Card from './Card';
+import { OrbitProgress } from "react-loading-indicators";
+import { useProducts } from "../hooks/useProduct";
+import Card from "./Card";
 
 export default function CardList() {
   const { data, isLoading } = useProducts();
@@ -12,9 +12,5 @@ export default function CardList() {
       </div>
     );
 
-  return (
-    <div className='grid grid-cols-1 md:grid-cols-5 gap-4'>
-      {data && data.map((product) => <Card {...product} key={product.id} />)}
-    </div>
-  );
+  return <div className='pt-20 grid grid-cols-1 md:grid-cols-5 gap-4'>{data && data.map((product) => <Card {...product} key={product.id} />)}</div>;
 }
