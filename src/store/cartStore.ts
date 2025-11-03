@@ -1,6 +1,6 @@
-import { create } from 'zustand';
-import { createJSONStorage, persist } from 'zustand/middleware';
-import useAuthStore from './authStore';
+import { create } from "zustand";
+import { createJSONStorage, persist } from "zustand/middleware";
+import useAuthStore from "./authStore";
 
 export type Cart = {
   id: number;
@@ -21,6 +21,7 @@ type CartAction = {
   addToCart: (newItem: Cart) => void;
   increaseQuantityItem: (id: number) => void;
   decreaseQuantityItem: (id: number) => void;
+  deleteItem: (id: number) => void;
 };
 
 const useCartStore = create<CartAction>()(
@@ -30,9 +31,7 @@ const useCartStore = create<CartAction>()(
       addToCart: (newItem) => {
         const activeUserId = useAuthStore.getState().currentUser!.userId;
         const userCarts = get().userCarts;
-        const existingUserCart = userCarts.find(
-          (cart) => cart.userId === activeUserId
-        );
+        const existingUserCart = userCarts.find((cart) => cart.userId === activeUserId);
 
         if (!existingUserCart) {
           const newCart: UserCart = {
@@ -44,9 +43,7 @@ const useCartStore = create<CartAction>()(
         }
 
         const existingItems = existingUserCart.items;
-        const existingItem = existingItems.find(
-          (item) => item.id === newItem.id
-        );
+        const existingItem = existingItems.find((item) => item.id === newItem.id);
         let updatedItems: Cart[];
 
         if (existingItem) {
@@ -64,18 +61,14 @@ const useCartStore = create<CartAction>()(
           updatedItems = [...existingItems, newItem];
         }
 
-        const updatedUserCarts = userCarts.map((cart) =>
-          cart.userId === activeUserId ? { ...cart, items: updatedItems } : cart
-        );
+        const updatedUserCarts = userCarts.map((cart) => (cart.userId === activeUserId ? { ...cart, items: updatedItems } : cart));
 
         set({ userCarts: updatedUserCarts });
       },
 
       increaseQuantityItem: (id) => {
         const currentUser = useAuthStore.getState().currentUser!;
-        const rightCart = get().userCarts.find(
-          (uc) => uc.userId === currentUser.userId
-        )!;
+        const rightCart = get().userCarts.find((uc) => uc.userId === currentUser.userId)!;
 
         const addSelectedItem = rightCart.items.map((cart) => {
           const newQuantity = cart.quantity + 1;
@@ -88,20 +81,14 @@ const useCartStore = create<CartAction>()(
             : cart;
         });
 
-        const cartUpdateWithAddQuantity = get().userCarts.map((uc) =>
-          uc.userId === currentUser.userId
-            ? { ...uc, items: addSelectedItem }
-            : uc
-        );
+        const cartUpdateWithAddQuantity = get().userCarts.map((uc) => (uc.userId === currentUser.userId ? { ...uc, items: addSelectedItem } : uc));
 
         set({ userCarts: cartUpdateWithAddQuantity });
       },
 
       decreaseQuantityItem: (id) => {
         const currentUser = useAuthStore.getState().currentUser!;
-        const rightCart = get().userCarts.find(
-          (uc) => uc.userId === currentUser.userId
-        )!;
+        const rightCart = get().userCarts.find((uc) => uc.userId === currentUser.userId)!;
 
         const reduceSelectedItem = rightCart.items.map((cart) => {
           const newQuantity = cart.quantity - 1;
@@ -115,16 +102,24 @@ const useCartStore = create<CartAction>()(
         });
 
         const cartUpdateWithReducedQuantity = get().userCarts.map((uc) =>
-          uc.userId === currentUser.userId
-            ? { ...uc, items: reduceSelectedItem }
-            : uc
+          uc.userId === currentUser.userId ? { ...uc, items: reduceSelectedItem } : uc
         );
 
         set({ userCarts: cartUpdateWithReducedQuantity });
       },
+      deleteItem: (id) => {
+        const currentUser = useAuthStore.getState().currentUser!;
+        const selectedItem = get().userCarts.find((uc) => uc.userId === currentUser.userId)!;
+
+        const filteredItem = selectedItem.items.filter((item) => item.id !== id);
+
+        const userCartWithFilteredItem = get().userCarts.map((uc) => (uc.userId === currentUser.userId ? { ...uc, items: filteredItem } : uc));
+
+        set({ userCarts: userCartWithFilteredItem });
+      },
     }),
     {
-      name: 'cart-store',
+      name: "cart-store",
       storage: createJSONStorage(() => localStorage),
       partialize: (state) => ({ userCarts: state.userCarts }),
     }
